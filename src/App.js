@@ -13,7 +13,6 @@ import Users from './components/Users/Users';
 import axios from 'axios';
 
 const App = () => {
-	const [users, setUsers] = useState([]);
 	const [user, setUser] = useState({});
 	const [repos, setRepos] = useState([]);
 	const [loading, setLoading] = useState(false);
@@ -41,12 +40,6 @@ const App = () => {
 		setLoading(false);
 	};
 
-	// Clear users from state
-	const clearUsers = () => {
-		setUsers([]);
-		setLoading(false);
-	};
-
 	// Show an alert message
 	const showAlert = (message, type) => {
 		setAlert({ message, type });
@@ -66,12 +59,8 @@ const App = () => {
 								path='/'
 								render={props => (
 									<>
-										<Search
-											clearUsers={clearUsers}
-											showClear={users.length > 0 ? true : false}
-											setAlert={showAlert}
-										/>
-										<Users loading={loading} users={users} />
+										<Search setAlert={showAlert} />
+										<Users />
 									</>
 								)}
 							/>
