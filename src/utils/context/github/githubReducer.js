@@ -14,6 +14,12 @@ const reducer = (state, action) => {
 				user: action.payload,
 				loading: false,
 			};
+		case GET_REPOS:
+			return {
+				...state,
+				repos: action.payload,
+				loading: false,
+			};
 		case CLEAR_USERS:
 			return {
 				...state,
