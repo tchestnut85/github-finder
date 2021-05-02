@@ -1,55 +1,48 @@
-import React, { Component } from 'react';
+import React, { useContext, useState } from 'react';
 
-import PropTypes from 'prop-types';
+import AlertContext from '../../../utils/context/alert/alertContext';
+import GithubContext from '../../../utils/context/github/githubContext';
 
-export class Search extends Component {
-	state = {
-		text: '',
-	};
+const Search = () => {
+	const githubContext = useContext(GithubContext);
+	const { users, clearUsers } = githubContext;
 
-	static propTypes = {
-		searchUsers: PropTypes.func.isRequired,
-		clearUsers: PropTypes.func.isRequired,
-		showClear: PropTypes.bool.isRequired,
-		setAlert: PropTypes.func.isRequired,
-	};
+	const alertContext = useContext(AlertContext);
 
-	onSubmit = e => {
+	const [text, setText] = useState('');
+
+	const onSubmit = e => {
 		e.preventDefault();
 
-		if (this.state.text === '') {
-			this.props.setAlert('You need to enter a search value.', 'light');
+		if (text === '') {
+			alertContext.setAlert('You need to enter a search value.', 'light');
 		} else {
-			this.props.searchUsers(this.state.text);
-			this.setState({ text: '' });
+			githubContext.searchUsers(text);
+			setText('');
 		}
 	};
 
-	onChange = e => this.setState({ [e.target.name]: e.target.value });
+	const onChange = e => setText(e.target.value);
 
-	render() {
-		const { showClear, clearUsers } = this.props;
-
-		return (
-			<div>
-				<form className='form' onSubmit={this.onSubmit}>
-					<input
-						type='text'
-						name='text'
-						palceholder='Search for a User.'
-						value={this.state.text}
-						onChange={this.onChange}
-					/>
-					<input type='submit' value='Search' className='btn btn-dark btn-block' />
-				</form>
-				{showClear && (
-					<button className='btn btn-block btn-light' onClick={clearUsers}>
-						Clear Users
-					</button>
-				)}
-			</div>
-		);
-	}
-}
+	return (
+		<div>
+			<form className='form' onSubmit={onSubmit}>
+				<input
+					type='text'
+					name='text'
+					palceholder='Search for a User.'
+					value={text}
+					onChange={onChange}
+				/>
+				<input type='submit' value='Search' className='btn btn-dark btn-block' />
+			</form>
+			{users.length > 0 && (
+				<button className='btn btn-block btn-light' onClick={clearUsers}>
+					Clear Users
+				</button>
+			)}
+		</div>
+	);
+};
 
 export default Search;
