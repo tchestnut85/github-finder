@@ -8,7 +8,7 @@ import axios from 'axios';
 const GithubState = props => {
 	const initialState = {
 		users: [],
-		singleUser: {},
+		user: {},
 		repos: [],
 		loading: false,
 	};
@@ -29,9 +29,21 @@ const GithubState = props => {
 		});
 	};
 
-	// Get user
+	// Get a single GitHub user
+	const getUser = async username => {
+		setLoading();
 
-	// Get repos
+		const res = await axios.get(
+			`https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+		);
+
+		dispatch({
+			type: GET_USER,
+			payload: res.data,
+		});
+	};
+
+	// Get single user repos
 
 	// Clear users from state
 	const clearUsers = () => dispatch({ type: CLEAR_USERS });
@@ -48,6 +60,7 @@ const GithubState = props => {
 				loading: state.loading,
 				searchUsers,
 				clearUsers,
+				getUser,
 			}}
 		>
 			{props.children}
